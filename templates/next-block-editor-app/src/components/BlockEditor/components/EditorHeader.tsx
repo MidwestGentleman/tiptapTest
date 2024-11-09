@@ -5,6 +5,7 @@ import { WebSocketStatus } from '@hocuspocus/provider'
 import { Toolbar } from '@/components/ui/Toolbar'
 import { Editor } from '@tiptap/core'
 import { useEditorState } from '@tiptap/react'
+import { useRouter } from 'next/navigation'
 
 export type EditorHeaderProps = {
   isSidebarOpen?: boolean
@@ -15,6 +16,8 @@ export type EditorHeaderProps = {
 }
 
 export const EditorHeader = ({ editor, collabState, users, isSidebarOpen, toggleSidebar }: EditorHeaderProps) => {
+  const router = useRouter()
+
   const { characters, words } = useEditorState({
     editor,
     selector: (ctx): { characters: number; words: number } => {
@@ -34,6 +37,15 @@ export const EditorHeader = ({ editor, collabState, users, isSidebarOpen, toggle
             className={isSidebarOpen ? 'bg-transparent' : ''}
           >
             <Icon name={isSidebarOpen ? 'PanelLeftClose' : 'PanelLeft'} />
+          </Toolbar.Button>
+          
+          <Toolbar.Button
+            tooltip="Form Builder"
+            onClick={() => router.push('/form-builder')}
+            className="flex items-center gap-2 px-3"
+          >
+            <Icon name="FileText" />
+            <span className="text-sm">Form Builder</span>
           </Toolbar.Button>
         </div>
       </div>

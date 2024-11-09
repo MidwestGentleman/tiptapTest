@@ -191,6 +191,17 @@ export const GROUPS: Group[] = [
           editor.chain().focus().setFooterColumns(FooterColumnLayout.ThreeColumn).run()
         },
       },
+      {
+        name: 'form',
+        label: 'Form Builder',
+        iconName: 'FileText',
+        description: 'Create a new form',
+        aliases: ['form', 'survey'],
+        shouldBeHidden: editor => editor.isActive('columns'),
+        action: editor => {
+          window.location.href = '/form-builder'
+        },
+      },
     ],
   },
 ]

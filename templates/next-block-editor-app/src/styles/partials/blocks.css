@@ -81,4 +81,37 @@
       @apply my-2 mx-0;
     }
   }
+
+  /* Footer Columns */
+  [data-type='footerColumns'] {
+    @apply grid gap-8 my-8;
+
+    &.layout-two-column {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    &.layout-three-column {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    &.layout-four-column {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    &.layout-five-column {
+      grid-template-columns: repeat(5, 1fr);
+    }
+
+    &.layout-six-column {
+      grid-template-columns: repeat(6, 1fr);
+    }
+  }
+
+  [data-type='footerColumn'] {
+    @apply min-h-[100px] p-4 rounded border-2 border-dashed border-gray-200;
+    
+    &:hover {
+      @apply border-gray-300;
+    }
+  }
 }

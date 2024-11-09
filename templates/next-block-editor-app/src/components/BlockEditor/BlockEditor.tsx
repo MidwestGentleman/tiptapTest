@@ -10,6 +10,7 @@ import '@/styles/index.css'
 import { Sidebar } from '@/components/Sidebar'
 import ImageBlockMenu from '@/extensions/ImageBlock/components/ImageBlockMenu'
 import { ColumnsMenu } from '@/extensions/MultiColumn/menus'
+import { FooterColumnsMenu } from '@/extensions/FooterColumns/menus'
 import { TableColumnMenu, TableRowMenu } from '@/extensions/Table/menus'
 import { EditorHeader } from './components/EditorHeader'
 import { TextMenu } from '../menus/TextMenu'
@@ -53,6 +54,7 @@ export const BlockEditor = ({
         <LinkMenu editor={editor} appendTo={menuContainerRef} />
         <TextMenu editor={editor} />
         <ColumnsMenu editor={editor} appendTo={menuContainerRef} />
+        <FooterColumnsMenu editor={editor} appendTo={menuContainerRef} />
         <TableRowMenu editor={editor} appendTo={menuContainerRef} />
         <TableColumnMenu editor={editor} appendTo={menuContainerRef} />
         <ImageBlockMenu editor={editor} appendTo={menuContainerRef} />

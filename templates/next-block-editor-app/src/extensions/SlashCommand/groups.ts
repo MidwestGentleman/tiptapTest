@@ -1,4 +1,5 @@
 import { Group } from './types'
+import { FooterColumnLayout } from '../FooterColumns/FooterColumns'
 
 export const GROUPS: Group[] = [
   {
@@ -177,6 +178,17 @@ export const GROUPS: Group[] = [
         shouldBeHidden: editor => editor.isActive('columns'),
         action: editor => {
           editor.chain().focus().insertTableOfContents().run()
+        },
+      },
+      {
+        name: 'footer',
+        label: 'Footer',
+        iconName: 'Columns3',
+        description: 'Add a footer section with columns',
+        aliases: ['footer', 'columns'],
+        shouldBeHidden: editor => editor.isActive('columns'),
+        action: editor => {
+          editor.chain().focus().setFooterColumns(FooterColumnLayout.ThreeColumn).run()
         },
       },
     ],

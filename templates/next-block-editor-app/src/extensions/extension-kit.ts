@@ -52,6 +52,8 @@ import {
 import { ImageUpload } from './ImageUpload'
 import { TableOfContentsNode } from './TableOfContentsNode'
 import { isChangeOrigin } from '@tiptap/extension-collaboration'
+import { FooterColumns } from './FooterColumns/FooterColumns'
+import { FooterColumn } from './FooterColumns/FooterColumn'
 
 interface ExtensionKitProps {
   provider?: HocuspocusProvider | null
@@ -161,6 +163,8 @@ export const ExtensionKit = ({ provider }: ExtensionKitProps) => [
     width: 2,
     class: 'ProseMirror-dropcursor border-black',
   }),
+  FooterColumns,
+  FooterColumn,
 ]
 
 export default ExtensionKit

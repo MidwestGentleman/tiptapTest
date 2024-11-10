@@ -8,27 +8,18 @@ import { Surface } from '@/components/ui/Surface'
 import { Icon } from '@/components/ui/Icon'
 import { Toolbar } from '@/components/ui/Toolbar'
 import { useState, useEffect } from 'react'
+import Color from '@tiptap/extension-color'
+import TextStyle from '@tiptap/extension-text-style'
+import Document from '@tiptap/extension-document'
+import Paragraph from '@tiptap/extension-paragraph'
+import Text from '@tiptap/extension-text'
+import Heading from '@tiptap/extension-heading'
+import Bold from '@tiptap/extension-bold'
+import Italic from '@tiptap/extension-italic'
 
 // Create a HeaderMenuBar component
 const HeaderMenuBar = ({ editor }: { editor: any }) => {
-  const [isFocused, setIsFocused] = useState(false)
-
-  useEffect(() => {
-    if (!editor) return
-
-    const onFocus = () => setIsFocused(true)
-    const onBlur = () => setIsFocused(false)
-
-    editor.on('focus', onFocus)
-    editor.on('blur', onBlur)
-
-    return () => {
-      editor.off('focus', onFocus)
-      editor.off('blur', onBlur)
-    }
-  }, [editor])
-
-  if (!editor || !isFocused) {
+  if (!editor) {
     return null
   }
 
@@ -111,42 +102,68 @@ export default function FormBuilder() {
   
   const headerEditor = useEditor({
     extensions: [
-      StarterKit.configure({
-        heading: {
-          levels: [1, 2]
+      Document,
+      Paragraph,
+      Text,
+      Heading.configure({
+        levels: [1, 2],
+        HTMLAttributes: {
+          class: 'font-bold',
+          heading1: {
+            class: 'text-5xl font-bold mb-4',
+          },
+          heading2: {
+            class: 'text-2xl font-semibold mb-3',
+          },
         },
-        bold: true,
-        italic: true,
       }),
-      Underline.configure(),
+      Bold,
+      Italic,
+      Underline,
       TextAlign.configure({
         types: ['heading', 'paragraph'],
         alignments: ['left', 'center', 'right'],
-        defaultAlignment: 'left',
       }),
+      TextStyle,
+      Color,
     ],
-    content: '<h1 class="text-red-600">HELP FIND A CURE</h1><h2 class="text-navy-800">Donate to National Glaucoma Research</h2><p>Your generosity helps us fund groundbreaking research and provide vital information to the public. Please give today.</p>',
+    content:
+      '<h1 class="text-3xl font-bold mb-4 text-red-600">HELP FIND A CURE</h1><h2 class="text-2xl font-semibold mb-3 text-navy-800">Donate to National Glaucoma Research</h2><p>Your generosity helps us fund groundbreaking research and provide vital information to the public. Please give today.</p>',
     editable: true,
+    immediatelyRender: false,
   })
 
   const footerEditor = useEditor({
     extensions: [
-      StarterKit.configure({
-        heading: {
-          levels: [1, 2]
+      Document,
+      Paragraph,
+      Text,
+      Heading.configure({
+        levels: [1, 2],
+        HTMLAttributes: {
+          class: 'font-bold',
+          heading1: {
+            class: 'text-3xl font-bold mb-4',
+          },
+          heading2: {
+            class: 'text-2xl font-semibold mb-3',
+          },
         },
-        bold: true,
-        italic: true,
       }),
-      Underline.configure(),
+      Bold,
+      Italic,
+      Underline,
       TextAlign.configure({
         types: ['heading', 'paragraph'],
         alignments: ['left', 'center', 'right'],
-        defaultAlignment: 'left',
       }),
+      TextStyle,
+      Color,
     ],
-    content: '<p>BrightFocus Foundation is tax-exempt nonprofit organization under section 501(c)(3) of the Internal Revenue Code of the United States.</p>',
+    content:
+      '<p>BrightFocus Foundation is tax-exempt nonprofit organization under section 501(c)(3) of the Internal Revenue Code of the United States.</p>',
     editable: true,
+    immediatelyRender: false,
   })
 
   return (
@@ -217,52 +234,24 @@ export default function FormBuilder() {
           <div>
             <h2 className="text-lg font-semibold mb-4">My Information</h2>
             <div className="space-y-4">
-              <input
-                type="email"
-                placeholder="Email Address"
-                className="w-full px-4 py-2 border rounded-md"
-              />
+              <input type="email" placeholder="Email Address" className="w-full px-4 py-2 border rounded-md" />
               <div className="grid grid-cols-2 gap-4">
-                <input
-                  type="text"
-                  placeholder="First Name"
-                  className="px-4 py-2 border rounded-md"
-                />
-                <input
-                  type="text"
-                  placeholder="Last Name"
-                  className="px-4 py-2 border rounded-md"
-                />
+                <input type="text" placeholder="First Name" className="px-4 py-2 border rounded-md" />
+                <input type="text" placeholder="Last Name" className="px-4 py-2 border rounded-md" />
               </div>
-              <input
-                type="text"
-                placeholder="Street Address"
-                className="w-full px-4 py-2 border rounded-md"
-              />
+              <input type="text" placeholder="Street Address" className="w-full px-4 py-2 border rounded-md" />
               <div className="grid grid-cols-3 gap-4">
-                <input
-                  type="text"
-                  placeholder="City"
-                  className="px-4 py-2 border rounded-md"
-                />
-                <select
-                  className="px-4 py-2 border rounded-md"
-                  defaultValue=""
-                >
-                  <option value="" disabled>State</option>
+                <input type="text" placeholder="City" className="px-4 py-2 border rounded-md" />
+                <select className="px-4 py-2 border rounded-md" defaultValue="">
+                  <option value="" disabled>
+                    State
+                  </option>
                   <option value="MD">Maryland</option>
                   {/* Add other states */}
                 </select>
-                <input
-                  type="text"
-                  placeholder="Zip Code"
-                  className="px-4 py-2 border rounded-md"
-                />
+                <input type="text" placeholder="Zip Code" className="px-4 py-2 border rounded-md" />
               </div>
-              <select
-                className="w-full px-4 py-2 border rounded-md"
-                defaultValue="US"
-              >
+              <select className="w-full px-4 py-2 border rounded-md" defaultValue="US">
                 <option value="US">United States</option>
                 {/* Add other countries */}
               </select>
@@ -277,7 +266,9 @@ export default function FormBuilder() {
                   <Icon name="Chrome" />
                   Pay
                 </button>
-                <button type="button" className="px-4 py-2 border rounded-md">Credit Card</button>
+                <button type="button" className="px-4 py-2 border rounded-md">
+                  Credit Card
+                </button>
                 <button type="button" className="px-4 py-2 border rounded-md flex items-center gap-2">
                   <Icon name="CreditCard" />
                   PayPal
@@ -286,7 +277,10 @@ export default function FormBuilder() {
               <div className="space-y-2">
                 <label className="flex items-center space-x-2">
                   <input type="checkbox" className="rounded border-gray-300" />
-                  <span className="text-sm">I'd like to cover the processing fee of $1.58 so my donation funds even more ground-breaking research.</span>
+                  <span className="text-sm">
+                    I&apos;d like to cover the processing fee of $1.58 so my donation funds even more ground-breaking
+                    research.
+                  </span>
                 </label>
                 <label className="flex items-center space-x-2">
                   <input type="checkbox" className="rounded border-gray-300" />
@@ -306,4 +300,4 @@ export default function FormBuilder() {
       </Surface>
     </div>
   )
-} 
+}

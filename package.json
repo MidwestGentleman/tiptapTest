@@ -14,5 +14,7 @@
   "keywords": [],
   "author": "Nick the Sick",
   "license": "SEE LICENSE IN LICENSE.md",
-  "dependencies": {}
+  "dependencies": {
+    "next": "^15.0.3"
+  }
 }

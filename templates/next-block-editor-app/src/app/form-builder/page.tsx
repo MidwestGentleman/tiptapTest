@@ -152,7 +152,7 @@ const FooterColumn = Node.create({
       'div',
       {
         'data-type': 'footer-column',
-        class: 'prose min-w-0 p-2 border border-dashed border-transparent hover:border-gray-200 rounded',
+        class: 'min-h-[100px] p-4 rounded border border-dashed border-gray-200 hover:border-gray-300 focus-within:border-blue-500 transition-colors',
       },
       0,
     ]
@@ -171,27 +171,24 @@ const FooterRow = Node.create({
   },
 
   renderHTML({ HTMLAttributes }) {
-    const columns = HTMLAttributes.columns || 4
     return [
       'div',
       {
         'data-type': 'footer-row',
-        class: 'flex items-start gap-4 mb-6 group relative',
-        'data-drag-handle': true,
+        class: 'relative flex gap-4 p-4 border border-transparent hover:border-gray-200 rounded group',
       },
       [
         'div',
         {
-          class: 'absolute -left-6 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 cursor-move',
-          contenteditable: 'false',
-          'data-drag-handle': true,
+          class: 'absolute -left-1 inset-y-0 w-1 bg-blue-500 opacity-0 group-hover:opacity-100 transition-opacity',
+          'data-drag-handle': '',
         },
-        '⋮',
       ],
       [
         'div',
         {
-          class: `grid grid-cols-${columns} gap-4 w-full`,
+          class: 'flex-1 grid gap-4',
+          style: `grid-template-columns: repeat(${HTMLAttributes.columns || 2}, minmax(0, 1fr))`,
         },
         0,
       ],
@@ -201,11 +198,7 @@ const FooterRow = Node.create({
   addAttributes() {
     return {
       columns: {
-        default: 4,
-        parseHTML: element => parseInt(element.getAttribute('data-columns') || '4'),
-        renderHTML: attributes => ({
-          'data-columns': attributes.columns,
-        }),
+        default: 2,
       },
     }
   },
@@ -373,33 +366,51 @@ const insertFourColumnLinksRow = (editor: any) => {
   }).run()
 }
 
-// Update FooterEditor component
+// Update FooterEditor component to handle drag and drop between rows
 const FooterEditor = ({ editor }: { editor: any }) => {
   const [{ isOver }, drop] = useDrop({
     accept: 'FOOTER_TEMPLATE',
-    drop: (item: { type: string }) => {
+    drop: (item: { type: string }, monitor) => {
       if (!editor?.isEditable) return
 
       try {
-        switch (item.type) {
-          case 'four-column-images':
-            insertFourColumnImageRow(editor)
-            break
-          case 'single-column-image':
-            insertSingleColumnWithImageRow(editor)
-            break
-          case 'two-column-text':
-            insertTwoColumnTextRow(editor)
-            break
-          case 'four-column-links':
-            insertFourColumnLinksRow(editor)
-            break
+        const dropPosition = monitor.getClientOffset()
+        const editorRect = document.querySelector('[data-type="footer-editor"]')?.getBoundingClientRect()
+        
+        if (dropPosition && editorRect) {
+          const rows = document.querySelectorAll('[data-type="footer-row"]')
+          let insertIndex = rows.length
+
+          // Find insert position based on drop position
+          rows.forEach((row, index) => {
+            const rect = row.getBoundingClientRect()
+            if (dropPosition.y < rect.top + rect.height / 2) {
+              insertIndex = index
+              return false
+            }
+          })
+
+          // Insert at calculated position
+          editor.commands.insertContentAt(insertIndex, {
+            type: 'footerRow',
+            attrs: { columns: 2 },
+            content: [
+              {
+                type: 'footerColumn',
+                content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Edit this column' }] }],
+              },
+              {
+                type: 'footerColumn',
+                content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Edit this column' }] }],
+              },
+            ],
+          })
         }
       } catch (error) {
         console.error('Error inserting template:', error)
       }
     },
-    collect: (monitor) => ({
+    collect: monitor => ({
       isOver: monitor.isOver(),
     }),
   })
@@ -408,8 +419,9 @@ const FooterEditor = ({ editor }: { editor: any }) => {
 
   return (
     <div 
-      ref={drop} 
-      className={`p-4 min-h-[200px] ${isOver ? 'bg-blue-50' : ''}`}
+      ref={drop}
+      data-type="footer-editor"
+      className={`min-h-[200px] ${isOver ? 'bg-blue-50' : ''}`}
     >
       <EditorContent editor={editor} />
     </div>
@@ -448,6 +460,7 @@ export default function FormBuilder() {
     content:
       '<h1 class="text-3xl font-bold mb-4 text-red-600">HELP FIND A CURE</h1><h2 class="text-2xl font-semibold mb-3 text-navy-800">Donate to National Glaucoma Research</h2><p>Your generosity helps us fund groundbreaking research and provide vital information to the public. Please give today.</p>',
     editable: true,
+    immediatelyRender: false
   })
 
   const footerEditor = useEditor({
@@ -473,6 +486,7 @@ export default function FormBuilder() {
     ],
     content: '',
     editable: true,
+    immediatelyRender: false,
     editorProps: {
       handleDrop: (view, event, slice, moved) => {
         if (!moved) {

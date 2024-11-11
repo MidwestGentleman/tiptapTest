@@ -19,13 +19,11 @@ declare global {
 }
 
 export const useBlockEditor = ({
-  aiToken,
   ydoc,
   provider,
   userId,
   userName = 'Maxi',
 }: {
-  aiToken?: string
   ydoc: YDoc
   provider?: TiptapCollabProvider | null | undefined
   userId?: string

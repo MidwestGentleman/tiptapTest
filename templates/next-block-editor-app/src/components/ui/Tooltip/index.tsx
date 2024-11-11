@@ -1,78 +1,52 @@
 'use client'
 
-import Tippy from '@tippyjs/react/headless'
-import React, { useCallback } from 'react'
+import Tippy from '@tippyjs/react'
+import { useCallback, useState } from 'react'
+import { Surface } from '../Surface'
 
-import { TippyProps, TooltipProps } from './types'
-
-const isMac = typeof window !== 'undefined' ? navigator.platform.toUpperCase().indexOf('MAC') >= 0 : false
-
-const ShortcutKey = ({ children }: { children: string }): JSX.Element => {
-  const className =
-    'inline-flex items-center justify-center w-5 h-5 p-1 text-[0.625rem] rounded font-semibold leading-none border border-neutral-200 text-neutral-500 border-b-2'
-
-  if (children === 'Mod') {
-    return <kbd className={className}>{isMac ? '⌘' : 'Ctrl'}</kbd> // ⌃
-  }
-
-  if (children === 'Shift') {
-    return <kbd className={className}>⇧</kbd>
-  }
-
-  if (children === 'Alt') {
-    return <kbd className={className}>{isMac ? '⌥' : 'Alt'}</kbd>
-  }
-
-  return <kbd className={className}>{children}</kbd>
+interface TooltipProps {
+  children: React.ReactNode
+  content?: React.ReactNode
+  disabled?: boolean
+  tippyOptions?: any
 }
 
-export const Tooltip = ({
-  children,
-  enabled = true,
-  title,
-  shortcut,
-  tippyOptions = {},
-}: TooltipProps): JSX.Element => {
+export const Tooltip = ({ children, content, disabled, tippyOptions }: TooltipProps) => {
+  const [mounted, setMounted] = useState(false)
+
   const renderTooltip = useCallback(
-    (attrs: TippyProps) => (
-      <span
-        className="flex items-center gap-2 px-2.5 py-1 bg-white border border-neutral-100 rounded-lg shadow-sm z-[999]"
-        tabIndex={-1}
-        data-placement={attrs['data-placement']}
-        data-reference-hidden={attrs['data-reference-hidden']}
-        data-escaped={attrs['data-escaped']}
-      >
-        {title && <span className="text-xs font-medium text-neutral-500">{title}</span>}
-        {shortcut && (
-          <span className="flex items-center gap-0.5">
-            {shortcut.map(shortcutKey => (
-              <ShortcutKey key={shortcutKey}>{shortcutKey}</ShortcutKey>
-            ))}
-          </span>
-        )}
-      </span>
+    () => (
+      <Surface className="px-2 py-1 text-xs font-medium text-center text-neutral-600 dark:text-neutral-400">
+        {content}
+      </Surface>
     ),
-    [shortcut, title],
+    [content],
   )
 
-  if (enabled) {
-    return (
-      <Tippy
-        delay={500}
-        offset={[0, 8]}
-        touch={false}
-        zIndex={99999}
-        appendTo={document.body}
-        // eslint-disable-next-line react/jsx-props-no-spreading
-        {...tippyOptions}
-        render={renderTooltip}
-      >
-        <span>{children}</span>
-      </Tippy>
-    )
+  // Only render Tippy after component mounts to avoid SSR issues
+  if (!mounted) {
+    return <>{children}</>
   }
 
-  return <>{children}</>
+  if (disabled || !content) {
+    return <>{children}</>
+  }
+
+  return (
+    <Tippy
+      animation={false}
+      delay={[500, 0]}
+      duration={[300, 250]}
+      touch={false}
+      zIndex={99999}
+      appendTo={() => document.body}  // Use function to avoid SSR issues
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      {...tippyOptions}
+      render={renderTooltip}
+    >
+      {children}
+    </Tippy>
+  )
 }
 
 export default Tooltip

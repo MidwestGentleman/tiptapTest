@@ -681,7 +681,9 @@ export default function FormBuilder() {
                       <Icon name="Chrome" />
                       Google Pay
                     </button>
-                    <button type="button" className={`${inputClassName} flex items-center gap-2 hover:bg-gray-50 dark:hover:bg-gray-900`}>
+                    <button
+                      type="button"
+                      className={`${inputClassName} flex items-center gap-2 hover:bg-gray-50 dark:hover:bg-gray-900`}>
                       <Icon name="CreditCard" />
                       Credit Card
                     </button>

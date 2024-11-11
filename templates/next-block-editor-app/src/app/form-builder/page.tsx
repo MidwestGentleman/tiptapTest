@@ -286,7 +286,7 @@ const FooterMenuBar = ({ editor }: { editor: any }) => {
           <Icon name="LayoutGrid" />
         </Toolbar.Button>
         <Toolbar.Button onClick={insertSingleColumnWithImageRow} tooltip="Single Column with Image">
-          <Icon name="Layout" />
+          <Icon name="LayoutTemplate" />
         </Toolbar.Button>
         <Toolbar.Button onClick={insertTwoColumnTextRow} tooltip="2-Column Text Row">
           <Icon name="Columns2" />

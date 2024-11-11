@@ -20,7 +20,6 @@ import * as Y from 'yjs'
 import { TiptapCollabProvider } from '@hocuspocus/provider'
 
 export const BlockEditor = ({
-  aiToken,
   ydoc,
   provider,
 }: {
@@ -32,7 +31,7 @@ export const BlockEditor = ({
   const menuContainerRef = useRef(null)
 
   const leftSidebar = useSidebar()
-  const { editor, users, collabState } = useBlockEditor({ aiToken, ydoc, provider })
+  const { editor, users, collabState } = useBlockEditor({ ydoc, provider })
 
   if (!editor || !users) {
     return null

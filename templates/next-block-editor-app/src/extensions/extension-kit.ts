@@ -1,7 +1,6 @@
 'use client'
 
 import { HocuspocusProvider } from '@hocuspocus/provider'
-
 import { API } from '@/lib/api'
 
 import {
@@ -9,14 +8,9 @@ import {
   CharacterCount,
   CodeBlock,
   Color,
-  Details,
-  DetailsContent,
-  DetailsSummary,
   Document,
   Dropcursor,
-  Emoji,
   Figcaption,
-  FileHandler,
   Focus,
   FontFamily,
   FontSize,
@@ -40,7 +34,6 @@ import {
   TrailingNode,
   Typography,
   Underline,
-  emojiSuggestion,
   Columns,
   Column,
   TaskItem,
@@ -77,14 +70,6 @@ export const ExtensionKit = ({ provider }: ExtensionKitProps) => [
     history: false,
     codeBlock: false,
   }),
-  Details.configure({
-    persist: true,
-    HTMLAttributes: {
-      class: 'details',
-    },
-  }),
-  DetailsContent,
-  DetailsSummary,
   CodeBlock,
   TextStyle,
   FontSize,
@@ -101,31 +86,6 @@ export const ExtensionKit = ({ provider }: ExtensionKitProps) => [
     clientId: provider?.document?.clientID,
   }),
   ImageBlock,
-  FileHandler.configure({
-    allowedMimeTypes: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
-    onDrop: (currentEditor, files, pos) => {
-      files.forEach(async file => {
-        const url = await API.uploadImage(file)
-
-        currentEditor.chain().setImageBlockAt({ pos, src: url }).focus().run()
-      })
-    },
-    onPaste: (currentEditor, files) => {
-      files.forEach(async file => {
-        const url = await API.uploadImage(file)
-
-        return currentEditor
-          .chain()
-          .setImageBlockAt({ pos: currentEditor.state.selection.anchor, src: url })
-          .focus()
-          .run()
-      })
-    },
-  }),
-  Emoji.configure({
-    enableEmoticons: true,
-    suggestion: emojiSuggestion,
-  }),
   TextAlign.extend({
     addKeyboardShortcuts() {
       return {}

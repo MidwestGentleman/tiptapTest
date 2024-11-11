@@ -32,7 +32,6 @@ import {
   Subscript,
   Superscript,
   Table,
-  TableOfContents,
   TableCell,
   TableHeader,
   TableRow,
@@ -46,12 +45,9 @@ import {
   Column,
   TaskItem,
   TaskList,
-  UniqueID,
 } from '.'
 
 import { ImageUpload } from './ImageUpload'
-import { TableOfContentsNode } from './TableOfContentsNode'
-import { isChangeOrigin } from '@tiptap/extension-collaboration'
 import { FooterColumns } from './FooterColumns/FooterColumns'
 import { FooterColumn } from './FooterColumns/FooterColumn'
 
@@ -72,10 +68,6 @@ export const ExtensionKit = ({ provider }: ExtensionKitProps) => [
     levels: [1, 2, 3, 4, 5, 6],
   }),
   HorizontalRule,
-  UniqueID.configure({
-    types: ['paragraph', 'heading', 'blockquote', 'codeBlock', 'table'],
-    filterTransaction: transaction => !isChangeOrigin(transaction),
-  }),
   StarterKit.configure({
     document: false,
     dropcursor: false,
@@ -105,8 +97,6 @@ export const ExtensionKit = ({ provider }: ExtensionKitProps) => [
   Highlight.configure({ multicolor: true }),
   Underline,
   CharacterCount.configure({ limit: 50000 }),
-  TableOfContents,
-  TableOfContentsNode,
   ImageUpload.configure({
     clientId: provider?.document?.clientID,
   }),

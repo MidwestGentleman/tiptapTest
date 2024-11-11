@@ -536,7 +536,6 @@ export default function FormBuilder() {
     ],
     content: '',
     editable: true,
-    immediatelyRender: false,
     editorProps: {
       handleDrop: (view, event, slice, moved) => {
         if (!moved) {

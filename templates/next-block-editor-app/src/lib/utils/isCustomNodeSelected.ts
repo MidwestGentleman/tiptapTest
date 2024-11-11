@@ -1,40 +1,44 @@
-import { Editor } from '@tiptap/react'
+import { Editor } from '@tiptap/core'
+import { Selection } from '@/extensions'
 
-import { AiWriter, AiImage, Figcaption, HorizontalRule, ImageBlock, ImageUpload, Link, CodeBlock } from '@/extensions'
-import { TableOfContentsNode } from '@/extensions/TableOfContentsNode'
+export const isCustomNodeSelected = (editor: Editor) => {
+  const { state } = editor
+  const { from, to } = state.selection
 
-export const isTableGripSelected = (node: HTMLElement) => {
-  let container = node
+  let isSelected = false
 
-  while (container && !['TD', 'TH'].includes(container.tagName)) {
-    container = container.parentElement!
-  }
+  state.doc.nodesBetween(from, to, node => {
+    if (
+      node.type.name === 'columns' ||
+      node.type.name === 'footerColumns' ||
+      node.type.name === 'imageBlock' ||
+      node.type.name === 'table'
+    ) {
+      isSelected = true
+      return false
+    }
+  })
 
-  const gripColumn = container && container.querySelector && container.querySelector('a.grip-column.selected')
-  const gripRow = container && container.querySelector && container.querySelector('a.grip-row.selected')
-
-  if (gripColumn || gripRow) {
-    return true
-  }
-
-  return false
+  return isSelected
 }
 
-export const isCustomNodeSelected = (editor: Editor, node: HTMLElement) => {
-  const customNodes = [
-    HorizontalRule.name,
-    ImageBlock.name,
-    ImageUpload.name,
-    CodeBlock.name,
-    ImageBlock.name,
-    Link.name,
-    AiWriter.name,
-    AiImage.name,
-    Figcaption.name,
-    TableOfContentsNode.name,
-  ]
+export const getSelectedNode = (editor: Editor) => {
+  const { state } = editor
+  const { from, to } = state.selection
 
-  return customNodes.some(type => editor.isActive(type)) || isTableGripSelected(node)
+  let selectedNode = null
+
+  state.doc.nodesBetween(from, to, node => {
+    if (
+      node.type.name === 'columns' ||
+      node.type.name === 'footerColumns' ||
+      node.type.name === 'imageBlock' ||
+      node.type.name === 'table'
+    ) {
+      selectedNode = node
+      return false
+    }
+  })
+
+  return selectedNode
 }
-
-export default isCustomNodeSelected

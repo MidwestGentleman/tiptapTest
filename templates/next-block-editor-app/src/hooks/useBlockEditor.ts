@@ -11,8 +11,6 @@ import { userColors, userNames } from '../lib/constants'
 import { randomElement } from '../lib/utils'
 import type { EditorUser } from '../components/BlockEditor/types'
 import { initialContent } from '@/lib/data/initialContent'
-import { Ai } from '@/extensions/Ai'
-import { AiImage, AiWriter } from '@/extensions'
 
 declare global {
   interface Window {
@@ -74,19 +72,6 @@ export const useBlockEditor = ({
               },
             })
           : undefined,
-        aiToken
-          ? AiWriter.configure({
-              authorId: userId,
-              authorName: userName,
-            })
-          : undefined,
-        aiToken
-          ? AiImage.configure({
-              authorId: userId,
-              authorName: userName,
-            })
-          : undefined,
-        aiToken ? Ai.configure({ token: aiToken }) : undefined,
       ].filter((e): e is AnyExtension => e !== undefined),
       editorProps: {
         attributes: {
